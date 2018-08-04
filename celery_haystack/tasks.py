@@ -119,7 +119,11 @@ class CeleryHaystackSignalHandler(Task):
                 # Call the appropriate handler of the current index and
                 # handle exception if neccessary
                 try:
-                    current_index.update_object(instance, using=using)
+                    # Remove objects marked as deleted from index
+		    if hasattr(instance, 'deleted') and instance.deleted == True:
+                        current_index.remove_object(instance, using=using)
+                    else:
+			current_index.update_object(instance, using=using)
                 except Exception as exc:
                     logger.exception(exc)
                     self.retry(exc=exc)
