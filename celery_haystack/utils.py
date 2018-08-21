@@ -37,6 +37,8 @@ def enqueue_task(action, instance, **kwargs):
         options['queue'] = settings.CELERY_HAYSTACK_QUEUE
     if settings.CELERY_HAYSTACK_COUNTDOWN:
         options['countdown'] = settings.CELERY_HAYSTACK_COUNTDOWN
+    if settings.CELERY_IGNORE_RESULT:
+        options['ignore_result'] = settings.CELERY_IGNORE_RESULT
 
     task = get_update_task()
     task_func = lambda: task.apply_async((action, identifier), kwargs, **options)
